@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode: `.dark` on a wrapping element activates dark: */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  /*
+   * Fade theme-related colors when toggling light <-> dark, in both directions.
+   * Kept in the base layer so interactive `transition` utilities (e.g. button
+   * hovers) still override it and stay snappy.
+   */
+  *,
+  ::before,
+  ::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: ease;
+    transition-duration: 400ms;
+  }
+}
