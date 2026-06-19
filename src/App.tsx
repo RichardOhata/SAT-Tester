@@ -18,6 +18,8 @@ function App() {
   const [stage, setStage] = useState<Stage>('start')
   const [answers, setAnswers] = useState<AnswerMap>({})
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const [startTime, setStartTime] = useState(0)
+  const [elapsedMs, setElapsedMs] = useState(0)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -30,7 +32,14 @@ function App() {
 
   function handleStart() {
     setAnswers({})
+    setStartTime(Date.now())
+    setElapsedMs(0)
     setStage('test')
+  }
+
+  function handleSubmit() {
+    setElapsedMs(Date.now() - startTime)
+    setStage('results')
   }
 
   function toggleTheme() {
@@ -54,7 +63,8 @@ function App() {
         questions={questions}
         answers={answers}
         onAnswer={handleAnswer}
-        onSubmit={() => setStage('results')}
+        onSubmit={handleSubmit}
+        startTime={startTime}
       />
     )
   }
@@ -63,6 +73,7 @@ function App() {
     <ResultsScreen
       questions={questions}
       answers={answers}
+      elapsedMs={elapsedMs}
       onRetake={handleStart}
       onHome={() => setStage('start')}
     />

@@ -2,15 +2,23 @@ import type { Question } from '../types'
 import { SECTION_LABELS } from '../types'
 import type { AnswerMap } from '../lib/scoring'
 import { isCorrect, scoreTest } from '../lib/scoring'
+import { formatDuration } from '../lib/time'
 
 type Props = {
   questions: Question[]
   answers: AnswerMap
+  elapsedMs: number
   onRetake: () => void
   onHome: () => void
 }
 
-export default function ResultsScreen({ questions, answers, onRetake, onHome }: Props) {
+export default function ResultsScreen({
+  questions,
+  answers,
+  elapsedMs,
+  onRetake,
+  onHome,
+}: Props) {
   const result = scoreTest(questions, answers)
 
   return (
@@ -33,6 +41,12 @@ export default function ResultsScreen({ questions, answers, onRetake, onHome }: 
           <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
             {result.answered} of {result.total} questions answered · raw practice score
           </p>
+
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+            <span aria-hidden="true">⏱</span>
+            <span className="font-mono tabular-nums">{formatDuration(elapsedMs)}</span>
+            <span className="font-normal text-slate-500 dark:text-slate-400">completion time</span>
+          </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {result.bySection.map((s) => (

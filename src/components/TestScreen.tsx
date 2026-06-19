@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Question } from '../types'
 import { SECTION_LABELS } from '../types'
 import type { AnswerMap } from '../lib/scoring'
+import { formatDuration } from '../lib/time'
 import QuestionView from './QuestionView'
 
 type Props = {
@@ -9,25 +10,49 @@ type Props = {
   answers: AnswerMap
   onAnswer: (questionId: string, value: string) => void
   onSubmit: () => void
+  startTime: number
 }
 
-export default function TestScreen({ questions, answers, onAnswer, onSubmit }: Props) {
+export default function TestScreen({
+  questions,
+  answers,
+  onAnswer,
+  onSubmit,
+  startTime,
+}: Props) {
   const [index, setIndex] = useState(0)
+  const [now, setNow] = useState(() => Date.now())
   const current = questions[index]
   const answeredCount = questions.filter((q) => answers[q.id]?.length).length
   const isLast = index === questions.length - 1
+
+  // Tick the elapsed-time display once per second while the test is open.
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Top bar */}
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-3 text-sm">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-6 py-3 text-sm">
           <span className="font-semibold text-slate-700 dark:text-slate-200">
             {SECTION_LABELS[current.section]}
           </span>
-          <span className="text-slate-500 dark:text-slate-400">
-            Question {index + 1} of {questions.length} · {answeredCount} answered
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="hidden text-slate-500 dark:text-slate-400 sm:inline">
+              Question {index + 1} of {questions.length} · {answeredCount} answered
+            </span>
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 font-mono font-semibold tabular-nums text-slate-700 dark:bg-slate-700 dark:text-slate-100"
+              aria-label="Elapsed time"
+              title="Elapsed time"
+            >
+              <span aria-hidden="true">⏱</span>
+              {formatDuration(now - startTime)}
+            </span>
+          </div>
         </div>
         <div className="h-1 w-full bg-slate-100 dark:bg-slate-700">
           <div
