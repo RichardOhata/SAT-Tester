@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { questions } from './data/questions'
+import type { Question } from './types'
 import type { AnswerMap } from './lib/scoring'
+import { prepareQuiz } from './lib/quiz'
 import StartScreen from './components/StartScreen'
 import TestScreen from './components/TestScreen'
 import ResultsScreen from './components/ResultsScreen'
@@ -16,6 +18,7 @@ function getInitialTheme(): Theme {
 
 function App() {
   const [stage, setStage] = useState<Stage>('start')
+  const [quiz, setQuiz] = useState<Question[]>(() => prepareQuiz(questions))
   const [answers, setAnswers] = useState<AnswerMap>({})
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
   const [startTime, setStartTime] = useState(0)
@@ -31,6 +34,7 @@ function App() {
   }
 
   function handleStart() {
+    setQuiz(prepareQuiz(questions))
     setAnswers({})
     setStartTime(Date.now())
     setElapsedMs(0)
@@ -49,7 +53,7 @@ function App() {
   if (stage === 'start') {
     return (
       <StartScreen
-        questions={questions}
+        questions={quiz}
         onStart={handleStart}
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -60,7 +64,7 @@ function App() {
   if (stage === 'test') {
     return (
       <TestScreen
-        questions={questions}
+        questions={quiz}
         answers={answers}
         onAnswer={handleAnswer}
         onSubmit={handleSubmit}
@@ -71,7 +75,7 @@ function App() {
 
   return (
     <ResultsScreen
-      questions={questions}
+      questions={quiz}
       answers={answers}
       elapsedMs={elapsedMs}
       onRetake={handleStart}
