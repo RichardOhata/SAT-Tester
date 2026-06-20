@@ -4,15 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "cross-env NODE_OPTIONS=--use-system-ca vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
     "@tailwindcss/vite": "^4.3.1",
+    "dotenv": "^17.4.2",
+    "mongodb": "^7.3.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-router-dom": "^7.18.0",
     "tailwindcss": "^4.3.1"
   },
   "devDependencies": {
@@ -20,7 +24,9 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@vercel/node": "^5.8.17",
     "@vitejs/plugin-react": "^5.1.1",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

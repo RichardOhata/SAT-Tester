@@ -59,7 +59,22 @@ export default function QuestionView({ question, answer, onAnswer }: Props) {
         </figure>
       )}
 
-      {question.figureNote && (
+      {question.imageUrl && (
+        <figure className="mt-4">
+          <img
+            src={question.imageUrl}
+            alt={question.figureNote || 'Question figure'}
+            className="max-h-96 w-auto rounded-lg border border-slate-200 dark:border-slate-700"
+          />
+          {question.figureNote && (
+            <figcaption className="mt-1 text-xs italic text-slate-500 dark:text-slate-400">
+              {question.figureNote}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
+      {!question.imageUrl && question.figureNote && (
         <p className="mt-4 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">
           <span className="font-semibold text-slate-700 dark:text-slate-200">
             Figure description:{' '}

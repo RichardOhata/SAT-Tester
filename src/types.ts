@@ -22,7 +22,9 @@ export type Question = {
   passage?: string
   /** Optional rendered data table (e.g. the robots-by-occupation table). */
   table?: TableData
-  /** Optional text description of an accompanying graph/figure. */
+  /** Optional figure image — an external URL or a base64 data URL. */
+  imageUrl?: string
+  /** Optional text description of an accompanying graph/figure (caption/fallback). */
   figureNote?: string
   /** The actual question being asked. */
   prompt: string
