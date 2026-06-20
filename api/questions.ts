@@ -104,6 +104,8 @@ function buildUpdateOps(body: QuestionInput) {
   else unset.figureNote = ''
   if (typeof body.imageUrl === 'string' && body.imageUrl !== '') set.imageUrl = body.imageUrl
   else unset.imageUrl = ''
+  if (typeof body.audioUrl === 'string' && body.audioUrl !== '') set.audioUrl = body.audioUrl
+  else unset.audioUrl = ''
 
   if (body.type === 'multiple-choice') {
     set.choices = body.choices

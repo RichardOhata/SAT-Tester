@@ -64,6 +64,7 @@ export default function QuestionForm({ initial, submitLabel, onSubmit, onCancel 
   const [domain, setDomain] = useState(initial?.domain ?? '')
   const [skill, setSkill] = useState(initial?.skill ?? '')
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? '')
+  const [audioUrl, setAudioUrl] = useState(initial?.audioUrl ?? '')
   const [figureNote, setFigureNote] = useState(initial?.figureNote ?? '')
   const [explanation, setExplanation] = useState(initial?.explanation ?? '')
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
@@ -75,6 +76,16 @@ export default function QuestionForm({ initial, submitLabel, onSubmit, onCancel 
       setImageUrl(await fileToDataUrl(file))
     } catch {
       setMessage('Could not read that image.')
+      setStatus('error')
+    }
+  }
+
+  async function handleAudioFile(file: File | undefined) {
+    if (!file) return
+    try {
+      setAudioUrl(await fileToDataUrl(file))
+    } catch {
+      setMessage('Could not read that audio file.')
       setStatus('error')
     }
   }
@@ -94,6 +105,7 @@ export default function QuestionForm({ initial, submitLabel, onSubmit, onCancel 
     setDomain('')
     setSkill('')
     setImageUrl('')
+    setAudioUrl('')
     setFigureNote('')
     setExplanation('')
   }
@@ -105,6 +117,7 @@ export default function QuestionForm({ initial, submitLabel, onSubmit, onCancel 
       passage: passage.trim() || undefined,
       prompt: prompt.trim(),
       imageUrl: imageUrl.trim() || undefined,
+      audioUrl: audioUrl.trim() || undefined,
       figureNote: figureNote.trim() || undefined,
       domain: domain.trim(),
       skill: skill.trim(),
@@ -322,6 +335,46 @@ export default function QuestionForm({ initial, submitLabel, onSubmit, onCancel 
           placeholder="Describe an accompanying graph or figure in words…"
           className={inputClass}
         />
+      </div>
+
+      <div>
+        <label className={labelClass}>Listening audio (optional)</label>
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            type="text"
+            value={audioUrl.startsWith('data:') ? '' : audioUrl}
+            onChange={(e) => setAudioUrl(e.target.value)}
+            placeholder="Paste an audio URL…"
+            className={inputClass + ' flex-1'}
+          />
+          <label className="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-600 dark:text-slate-200 dark:hover:border-slate-500">
+            Upload
+            <input
+              type="file"
+              accept="audio/*"
+              className="hidden"
+              onChange={(e) => handleAudioFile(e.target.files?.[0])}
+            />
+          </label>
+        </div>
+        {audioUrl && (
+          <div className="mt-3 flex items-center gap-3">
+            <audio controls src={audioUrl} className="max-w-xs">
+              Your browser does not support audio playback.
+            </audio>
+            <button
+              type="button"
+              onClick={() => setAudioUrl('')}
+              className="text-sm font-semibold text-slate-500 transition hover:text-rose-600 dark:text-slate-400"
+            >
+              Remove
+            </button>
+          </div>
+        )}
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          For longer clips, host the file and paste a URL — large uploaded files can exceed
+          the save limit.
+        </p>
       </div>
 
       <div>

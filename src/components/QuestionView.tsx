@@ -83,6 +83,17 @@ export default function QuestionView({ question, answer, onAnswer }: Props) {
         </p>
       )}
 
+      {question.audioUrl && (
+        <div className="mt-4">
+          <p className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">
+            🔊 Listening
+          </p>
+          <audio controls src={question.audioUrl} className="w-full max-w-md">
+            Your browser does not support audio playback.
+          </audio>
+        </div>
+      )}
+
       <p className="mt-6 font-semibold text-slate-900 dark:text-slate-100">{question.prompt}</p>
 
       {question.type === 'multiple-choice' && question.choices ? (

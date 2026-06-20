@@ -24,6 +24,8 @@ export type Question = {
   table?: TableData
   /** Optional figure image — an external URL or a base64 data URL. */
   imageUrl?: string
+  /** Optional listening-component audio — an external URL or a base64 data URL. */
+  audioUrl?: string
   /** Optional text description of an accompanying graph/figure (caption/fallback). */
   figureNote?: string
   /** The actual question being asked. */
